@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from "react"
 import { Button } from "../button"
 import { FormItem } from "../form-item"
+import { Pagination } from "../pagination"
+
 
 export function DataGrid() {
 
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
-
   const [todo, setTodo] = useState(null)
+  const [sorting, setSorting] = useState([])
+  
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(30)
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [itemsPerPage, setItemsPerPage])
+
+  const indexofLastItems = currentPage * itemsPerPage
+  const indexOfFirstItems = indexofLastItems - itemsPerPage
+  const currentItems = items.slice(indexOfFirstItems, indexofLastItems)
+  const totalPagesNum = Math.ceil(items.length/itemsPerPage)
+
 
   const loadData = () => {
     setLoading(true)
@@ -29,7 +40,7 @@ export function DataGrid() {
   const renderBody = () => {
     return (
       <React.Fragment>
-        {items.sort((a, b) => b.id - a.id).map((item, i) => {
+        {currentItems.map((item, i) => {
           return (
             <tr key={i}>
               <th scope="row" >{item.id}</th>
@@ -53,9 +64,10 @@ export function DataGrid() {
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Başlık</th>
-            <th scope="col">Durum</th>
+            {/* Sorting */}
+            <th scope="col" onClick={() => sortingId()}>#</th>
+            <th scope="col" onClick={() => sortingTitle()}>Başlık</th>
+            <th scope="col" onClick={() => sortingCompleted()}>Durum</th>
             <th scope="col">Aksiyonlar</th>
           </tr>
         </thead>
@@ -63,9 +75,64 @@ export function DataGrid() {
           {renderBody()}
         </tbody>
       </table>
+      
+      <nav class="navbar navbar-light  justify-content-between">
+      <div>
+      <button type="button" className="btn btn-outline-primary" onClick={() => setItemsPerPage(() => {return 25;})}>25</button>
+      <button type="button" className="btn btn-outline-primary" onClick={() => setItemsPerPage(() => {return 50;})}>50</button>
+      <button type="button" className="btn btn-outline-primary" onClick={() => setItemsPerPage(() => {return 75;})}>75</button>
+      <button type="button" className="btn btn-outline-primary" onClick={() => setItemsPerPage(() => {return 100;})}>100</button></div>
+  <form class="form-inline">
+  <Pagination pages={totalPagesNum} setCurrentPage ={setCurrentPage}/>
+  </form>
+</nav>
+      
+      
+      
+      
     </>
     )
   }
+  // ****************** Sorting *******************
+  const sortingId = () => {
+    if (sorting === "ASC") {
+      const sorted = [...items].sort((a, b) => (a.id < b.id ? -1 : 1));
+      setSorting("DESC");
+      setItems(sorted);
+    } else {
+      const sorted = [...items].sort((a, b) => (a.id > b.id ? -1 : 1));
+      setSorting("ASC");
+      setItems(sorted);
+    }
+  };
+
+  const sortingTitle = () => {
+    if (sorting === "ASC") {
+      const sorted = [...items].sort((a, b) => (a.title < b.title ? -1 : 1));
+      setSorting("DESC");
+      setItems(sorted);
+    } else {
+      const sorted = [...items].sort((a, b) => (a.title > b.title ? -1 : 1));
+      setSorting("ASC");
+      setItems(sorted);
+    }
+  };
+
+  const sortingCompleted = () => {
+    if (sorting === "ASC") {
+      const sorted = [...items].sort((a, b) =>
+        a.completed < b.completed ? -1 : 1
+      );
+      setSorting("DESC");
+      setItems(sorted);
+    } else {
+      const sorted = [...items].sort((a, b) =>
+        a.completed > b.completed ? -1 : 1
+      );
+      setSorting("ASC");
+      setItems(sorted);
+    }
+  };
 
   const saveChanges = () => {
 
