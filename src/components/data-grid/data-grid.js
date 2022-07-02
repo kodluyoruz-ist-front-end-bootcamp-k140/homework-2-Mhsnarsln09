@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react"
 import { Button } from "../button"
 import { FormItem } from "../form-item"
 import { Pagination } from "../pagination"
-
+import "./data-grid.css"
 
 export function DataGrid() {
 
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
   const [todo, setTodo] = useState(null)
-  const [sorting, setSorting] = useState([])
+  const [sorting, setSorting] = useState("ASC")
   
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(30)
+  const [itemsPerPage, setItemsPerPage] = useState(15)
 
   useEffect(() => {
     loadData()
@@ -94,6 +94,8 @@ export function DataGrid() {
     )
   }
   // ****************** Sorting *******************
+
+  
   const sortingId = () => {
     if (sorting === "ASC") {
       const sorted = [...items].sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -120,15 +122,11 @@ export function DataGrid() {
 
   const sortingCompleted = () => {
     if (sorting === "ASC") {
-      const sorted = [...items].sort((a, b) =>
-        a.completed < b.completed ? -1 : 1
-      );
+      const sorted = [...items].sort((a, b) => (a.completed < b.completed ? -1 : 1));
       setSorting("DESC");
       setItems(sorted);
     } else {
-      const sorted = [...items].sort((a, b) =>
-        a.completed > b.completed ? -1 : 1
-      );
+      const sorted = [...items].sort((a, b) => (a.completed > b.completed ? -1 : 1));
       setSorting("ASC");
       setItems(sorted);
     }
