@@ -8,6 +8,8 @@ import { DataGrid, DataGridClsComponent } from './components/data-grid';
 import { Header } from './components/header';
 import { Button } from "./components/button"
 
+
+
 function App() {
 
   const [activeTab, setActiveTab] = useState("fn")
@@ -23,7 +25,9 @@ function App() {
         </div>
         <br />
         { activeTab == "fn" ? <DataGrid /> : <DataGridClsComponent />}
+          
       </div>
+    
     </div>
   );
 }

@@ -28,7 +28,7 @@ export class DataGridClsComponent extends React.Component {
   renderBody = () => {
     return (
       <React.Fragment>
-        {this.state.items.sort((a, b) => b.id - a.id).map((item, i) => {
+        {this.state.items.map((item, i) => {
           return (
             <tr key={i}>
               <th scope="row" >{item.id}</th>
@@ -44,7 +44,6 @@ export class DataGridClsComponent extends React.Component {
       </React.Fragment>
     )
   }
-
   renderTable = () => {
     return (
       <>
